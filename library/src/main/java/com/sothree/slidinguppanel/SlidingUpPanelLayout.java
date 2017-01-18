@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
@@ -938,7 +939,14 @@ public class SlidingUpPanelLayout extends ViewGroup {
                 }
                 break;
         }
-        return mDragHelper.shouldInterceptTouchEvent(ev);
+        final boolean shouldInterceptTouchEvent = mDragHelper.shouldInterceptTouchEvent(ev);
+
+        ViewParent parent = getParent();
+        if (parent != null) {
+            parent.requestDisallowInterceptTouchEvent(shouldInterceptTouchEvent);
+        }
+
+        return shouldInterceptTouchEvent;
     }
 
     @Override
